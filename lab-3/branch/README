@@ -1,0 +1,4 @@
+// compiltation options
+gcc -O0 (-m32) -g -no-pie -fno-pic source-file -o executable-file
+// -no-pie : no position executable independent
+// -fno-pic : file no position independent code

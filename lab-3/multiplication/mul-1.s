@@ -1,5 +1,5 @@
 
-gdbtest:     file format elf32-i386
+mulc:     file format elf32-i386
 
 
 Disassembly of section .init:
@@ -162,7 +162,7 @@ Disassembly of section .text:
 00001189 <main>:
 #include <stdio.h>
 
-int main(){
+int main(int argc, char ** argv) {
     1189:	8d 4c 24 04          	lea    0x4(%esp),%ecx
     118d:	83 e4 f0             	and    $0xfffffff0,%esp
     1190:	ff 71 fc             	push   -0x4(%ecx)
@@ -170,46 +170,69 @@ int main(){
     1194:	89 e5                	mov    %esp,%ebp
     1196:	53                   	push   %ebx
     1197:	51                   	push   %ecx
-    1198:	83 ec 10             	sub    $0x10,%esp
-    119b:	e8 44 00 00 00       	call   11e4 <__x86.get_pc_thunk.ax>
-    11a0:	05 54 2e 00 00       	add    $0x2e54,%eax
-    int x = 3, y = 5, z;
-    11a5:	c7 45 f4 03 00 00 00 	movl   $0x3,-0xc(%ebp)
-    11ac:	c7 45 f0 05 00 00 00 	movl   $0x5,-0x10(%ebp)
-    z = x + y;
-    11b3:	8b 4d f4             	mov    -0xc(%ebp),%ecx
-    11b6:	8b 55 f0             	mov    -0x10(%ebp),%edx
-    11b9:	01 ca                	add    %ecx,%edx
-    11bb:	89 55 ec             	mov    %edx,-0x14(%ebp)
-    printf("z = %d\n", z);
-    11be:	83 ec 08             	sub    $0x8,%esp
-    11c1:	ff 75 ec             	push   -0x14(%ebp)
-    11c4:	8d 90 14 e0 ff ff    	lea    -0x1fec(%eax),%edx
-    11ca:	52                   	push   %edx
-    11cb:	89 c3                	mov    %eax,%ebx
-    11cd:	e8 6e fe ff ff       	call   1040 <printf@plt>
-    11d2:	83 c4 10             	add    $0x10,%esp
+    1198:	83 ec 30             	sub    $0x30,%esp
+    119b:	e8 e5 ff ff ff       	call   1185 <__x86.get_pc_thunk.dx>
+    11a0:	81 c2 54 2e 00 00    	add    $0x2e54,%edx
+    int x = 3, y = 4, z1, z2, z3, z4;
+    11a6:	c7 45 f4 03 00 00 00 	movl   $0x3,-0xc(%ebp)
+    11ad:	c7 45 f0 04 00 00 00 	movl   $0x4,-0x10(%ebp)
+    unsigned ux = 3, uy = 4, uz;
+    11b4:	c7 45 ec 03 00 00 00 	movl   $0x3,-0x14(%ebp)
+    11bb:	c7 45 e8 04 00 00 00 	movl   $0x4,-0x18(%ebp)
+    z1 = x * y;
+    11c2:	8b 45 f4             	mov    -0xc(%ebp),%eax
+    11c5:	0f af 45 f0          	imul   -0x10(%ebp),%eax
+    11c9:	89 45 e4             	mov    %eax,-0x1c(%ebp)
+    uz = ux * uy;
+    11cc:	8b 45 ec             	mov    -0x14(%ebp),%eax
+    11cf:	0f af 45 e8          	imul   -0x18(%ebp),%eax
+    11d3:	89 45 e0             	mov    %eax,-0x20(%ebp)
+    z2 = x * 3;
+    11d6:	8b 4d f4             	mov    -0xc(%ebp),%ecx
+    11d9:	89 c8                	mov    %ecx,%eax
+    11db:	01 c0                	add    %eax,%eax
+    11dd:	01 c8                	add    %ecx,%eax
+    11df:	89 45 dc             	mov    %eax,-0x24(%ebp)
+    z3 = x * 1024;
+    11e2:	8b 45 f4             	mov    -0xc(%ebp),%eax
+    11e5:	c1 e0 0a             	shl    $0xa,%eax
+    11e8:	89 45 d8             	mov    %eax,-0x28(%ebp)
+    z4 = x * x + 4 * x + 8;
+    11eb:	8b 45 f4             	mov    -0xc(%ebp),%eax
+    11ee:	0f af c0             	imul   %eax,%eax
+    11f1:	8b 4d f4             	mov    -0xc(%ebp),%ecx
+    11f4:	c1 e1 02             	shl    $0x2,%ecx
+    11f7:	01 c8                	add    %ecx,%eax
+    11f9:	83 c0 08             	add    $0x8,%eax
+    11fc:	89 45 d4             	mov    %eax,-0x2c(%ebp)
+    printf("z1 = %d, %z2 = %d, %z3 = %d, %z4 = %d\n", z1, z2, z3, z4);
+    11ff:	83 ec 0c             	sub    $0xc,%esp
+    1202:	ff 75 d4             	push   -0x2c(%ebp)
+    1205:	ff 75 d8             	push   -0x28(%ebp)
+    1208:	ff 75 dc             	push   -0x24(%ebp)
+    120b:	ff 75 e4             	push   -0x1c(%ebp)
+    120e:	8d 82 14 e0 ff ff    	lea    -0x1fec(%edx),%eax
+    1214:	50                   	push   %eax
+    1215:	89 d3                	mov    %edx,%ebx
+    1217:	e8 24 fe ff ff       	call   1040 <printf@plt>
+    121c:	83 c4 20             	add    $0x20,%esp
     return 0;
-    11d5:	b8 00 00 00 00       	mov    $0x0,%eax
+    121f:	b8 00 00 00 00       	mov    $0x0,%eax
 }
-    11da:	8d 65 f8             	lea    -0x8(%ebp),%esp
-    11dd:	59                   	pop    %ecx
-    11de:	5b                   	pop    %ebx
-    11df:	5d                   	pop    %ebp
-    11e0:	8d 61 fc             	lea    -0x4(%ecx),%esp
-    11e3:	c3                   	ret
-
-000011e4 <__x86.get_pc_thunk.ax>:
-    11e4:	8b 04 24             	mov    (%esp),%eax
-    11e7:	c3                   	ret
+    1224:	8d 65 f8             	lea    -0x8(%ebp),%esp
+    1227:	59                   	pop    %ecx
+    1228:	5b                   	pop    %ebx
+    1229:	5d                   	pop    %ebp
+    122a:	8d 61 fc             	lea    -0x4(%ecx),%esp
+    122d:	c3                   	ret
 
 Disassembly of section .fini:
 
-000011e8 <_fini>:
-    11e8:	53                   	push   %ebx
-    11e9:	83 ec 08             	sub    $0x8,%esp
-    11ec:	e8 9f fe ff ff       	call   1090 <__x86.get_pc_thunk.bx>
-    11f1:	81 c3 03 2e 00 00    	add    $0x2e03,%ebx
-    11f7:	83 c4 08             	add    $0x8,%esp
-    11fa:	5b                   	pop    %ebx
-    11fb:	c3                   	ret
+00001230 <_fini>:
+    1230:	53                   	push   %ebx
+    1231:	83 ec 08             	sub    $0x8,%esp
+    1234:	e8 57 fe ff ff       	call   1090 <__x86.get_pc_thunk.bx>
+    1239:	81 c3 bb 2d 00 00    	add    $0x2dbb,%ebx
+    123f:	83 c4 08             	add    $0x8,%esp
+    1242:	5b                   	pop    %ebx
+    1243:	c3                   	ret

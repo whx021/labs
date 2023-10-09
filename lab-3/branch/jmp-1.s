@@ -1,5 +1,5 @@
 
-gdbtest:     file format elf32-i386
+jmp-1:     file format elf32-i386
 
 
 Disassembly of section .init:
@@ -159,57 +159,93 @@ Disassembly of section .text:
     1185:	8b 14 24             	mov    (%esp),%edx
     1188:	c3                   	ret
 
-00001189 <main>:
+00001189 <sum>:
 #include <stdio.h>
 
-int main(){
-    1189:	8d 4c 24 04          	lea    0x4(%esp),%ecx
-    118d:	83 e4 f0             	and    $0xfffffff0,%esp
-    1190:	ff 71 fc             	push   -0x4(%ecx)
-    1193:	55                   	push   %ebp
-    1194:	89 e5                	mov    %esp,%ebp
-    1196:	53                   	push   %ebx
-    1197:	51                   	push   %ecx
-    1198:	83 ec 10             	sub    $0x10,%esp
-    119b:	e8 44 00 00 00       	call   11e4 <__x86.get_pc_thunk.ax>
-    11a0:	05 54 2e 00 00       	add    $0x2e54,%eax
-    int x = 3, y = 5, z;
-    11a5:	c7 45 f4 03 00 00 00 	movl   $0x3,-0xc(%ebp)
-    11ac:	c7 45 f0 05 00 00 00 	movl   $0x5,-0x10(%ebp)
-    z = x + y;
-    11b3:	8b 4d f4             	mov    -0xc(%ebp),%ecx
-    11b6:	8b 55 f0             	mov    -0x10(%ebp),%edx
-    11b9:	01 ca                	add    %ecx,%edx
-    11bb:	89 55 ec             	mov    %edx,-0x14(%ebp)
-    printf("z = %d\n", z);
-    11be:	83 ec 08             	sub    $0x8,%esp
-    11c1:	ff 75 ec             	push   -0x14(%ebp)
-    11c4:	8d 90 14 e0 ff ff    	lea    -0x1fec(%eax),%edx
-    11ca:	52                   	push   %edx
-    11cb:	89 c3                	mov    %eax,%ebx
-    11cd:	e8 6e fe ff ff       	call   1040 <printf@plt>
-    11d2:	83 c4 10             	add    $0x10,%esp
-    return 0;
-    11d5:	b8 00 00 00 00       	mov    $0x0,%eax
+int sum(int a[], int n) {
+    1189:	55                   	push   %ebp
+    118a:	89 e5                	mov    %esp,%ebp
+    118c:	83 ec 10             	sub    $0x10,%esp
+    118f:	e8 b0 00 00 00       	call   1244 <__x86.get_pc_thunk.ax>
+    1194:	05 60 2e 00 00       	add    $0x2e60,%eax
+    int i, sum = 0;
+    1199:	c7 45 f8 00 00 00 00 	movl   $0x0,-0x8(%ebp)
+    for (i = 0; i < n; ++i) {
+    11a0:	c7 45 fc 00 00 00 00 	movl   $0x0,-0x4(%ebp)
+    11a7:	eb 18                	jmp    11c1 <sum+0x38>
+        sum += a[i];
+    11a9:	8b 45 fc             	mov    -0x4(%ebp),%eax
+    11ac:	8d 14 85 00 00 00 00 	lea    0x0(,%eax,4),%edx
+    11b3:	8b 45 08             	mov    0x8(%ebp),%eax
+    11b6:	01 d0                	add    %edx,%eax
+    11b8:	8b 00                	mov    (%eax),%eax
+    11ba:	01 45 f8             	add    %eax,-0x8(%ebp)
+    for (i = 0; i < n; ++i) {
+    11bd:	83 45 fc 01          	addl   $0x1,-0x4(%ebp)
+    11c1:	8b 45 fc             	mov    -0x4(%ebp),%eax
+    11c4:	3b 45 0c             	cmp    0xc(%ebp),%eax
+    11c7:	7c e0                	jl     11a9 <sum+0x20>
+    }
+    return sum;
+    11c9:	8b 45 f8             	mov    -0x8(%ebp),%eax
 }
-    11da:	8d 65 f8             	lea    -0x8(%ebp),%esp
-    11dd:	59                   	pop    %ecx
-    11de:	5b                   	pop    %ebx
-    11df:	5d                   	pop    %ebp
-    11e0:	8d 61 fc             	lea    -0x4(%ecx),%esp
-    11e3:	c3                   	ret
+    11cc:	c9                   	leave
+    11cd:	c3                   	ret
 
-000011e4 <__x86.get_pc_thunk.ax>:
-    11e4:	8b 04 24             	mov    (%esp),%eax
-    11e7:	c3                   	ret
+000011ce <main>:
+
+int main(int argc, char **argv) {
+    11ce:	8d 4c 24 04          	lea    0x4(%esp),%ecx
+    11d2:	83 e4 f0             	and    $0xfffffff0,%esp
+    11d5:	ff 71 fc             	push   -0x4(%ecx)
+    11d8:	55                   	push   %ebp
+    11d9:	89 e5                	mov    %esp,%ebp
+    11db:	53                   	push   %ebx
+    11dc:	51                   	push   %ecx
+    11dd:	83 ec 20             	sub    $0x20,%esp
+    11e0:	e8 ab fe ff ff       	call   1090 <__x86.get_pc_thunk.bx>
+    11e5:	81 c3 0f 2e 00 00    	add    $0x2e0f,%ebx
+    int a[4] = {1, 2, 3, 4}, n = 3, x;
+    11eb:	c7 45 e0 01 00 00 00 	movl   $0x1,-0x20(%ebp)
+    11f2:	c7 45 e4 02 00 00 00 	movl   $0x2,-0x1c(%ebp)
+    11f9:	c7 45 e8 03 00 00 00 	movl   $0x3,-0x18(%ebp)
+    1200:	c7 45 ec 04 00 00 00 	movl   $0x4,-0x14(%ebp)
+    1207:	c7 45 f4 03 00 00 00 	movl   $0x3,-0xc(%ebp)
+    x = sum(a, n);
+    120e:	ff 75 f4             	push   -0xc(%ebp)
+    1211:	8d 45 e0             	lea    -0x20(%ebp),%eax
+    1214:	50                   	push   %eax
+    1215:	e8 6f ff ff ff       	call   1189 <sum>
+    121a:	83 c4 08             	add    $0x8,%esp
+    121d:	89 45 f0             	mov    %eax,-0x10(%ebp)
+    printf("sum = %d\n", x);
+    1220:	83 ec 08             	sub    $0x8,%esp
+    1223:	ff 75 f0             	push   -0x10(%ebp)
+    1226:	8d 83 14 e0 ff ff    	lea    -0x1fec(%ebx),%eax
+    122c:	50                   	push   %eax
+    122d:	e8 0e fe ff ff       	call   1040 <printf@plt>
+    1232:	83 c4 10             	add    $0x10,%esp
+    return 0;
+    1235:	b8 00 00 00 00       	mov    $0x0,%eax
+}
+    123a:	8d 65 f8             	lea    -0x8(%ebp),%esp
+    123d:	59                   	pop    %ecx
+    123e:	5b                   	pop    %ebx
+    123f:	5d                   	pop    %ebp
+    1240:	8d 61 fc             	lea    -0x4(%ecx),%esp
+    1243:	c3                   	ret
+
+00001244 <__x86.get_pc_thunk.ax>:
+    1244:	8b 04 24             	mov    (%esp),%eax
+    1247:	c3                   	ret
 
 Disassembly of section .fini:
 
-000011e8 <_fini>:
-    11e8:	53                   	push   %ebx
-    11e9:	83 ec 08             	sub    $0x8,%esp
-    11ec:	e8 9f fe ff ff       	call   1090 <__x86.get_pc_thunk.bx>
-    11f1:	81 c3 03 2e 00 00    	add    $0x2e03,%ebx
-    11f7:	83 c4 08             	add    $0x8,%esp
-    11fa:	5b                   	pop    %ebx
-    11fb:	c3                   	ret
+00001248 <_fini>:
+    1248:	53                   	push   %ebx
+    1249:	83 ec 08             	sub    $0x8,%esp
+    124c:	e8 3f fe ff ff       	call   1090 <__x86.get_pc_thunk.bx>
+    1251:	81 c3 a3 2d 00 00    	add    $0x2da3,%ebx
+    1257:	83 c4 08             	add    $0x8,%esp
+    125a:	5b                   	pop    %ebx
+    125b:	c3                   	ret
